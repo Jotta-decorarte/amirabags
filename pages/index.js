@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import { products, personalizations } from "../lib/products";
 import { trackCatalogView, trackWhatsAppContact } from "../lib/pixel";
 import { useAnalytics } from "../components/Analytics";
 import ProductCard from "../components/ProductCard";
+import QuoteDrawer from "../components/QuoteDrawer";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5521972628996";
@@ -13,6 +14,8 @@ const kitMessage = "Olá! Quero montar um kit personalizado para meu evento com 
 export default function Home() {
   const { ready } = useAnalytics();
   const viewed = useRef(false);
+  const [quote, setQuote] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   useEffect(() => {
     if (!ready || viewed.current) return;
     const catalog = document.getElementById("produtos");
@@ -26,7 +29,29 @@ export default function Home() {
     return () => observer.disconnect();
   }, [ready]);
 
-  function handleBuy(item) { trackWhatsAppContact(item); }
+  function addToQuote(product, quantity) {
+    const unitPrice = quantity >= product.bulkQuantity ? product.priceBulk : product.priceUnit;
+    setQuote(current => {
+      const existing = current.find(item => item.id === product.id);
+      if (existing) return current.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity, unitPrice: item.quantity + quantity >= product.bulkQuantity ? product.priceBulk : product.priceUnit } : item);
+      return [...current, { ...product, quantity, unitPrice }];
+    });
+    setDrawerOpen(true);
+  }
+
+  function changeQuantity(id, value) {
+    setQuote(current => current.map(item => {
+      if (item.id !== id) return item;
+      const quantity = Math.max(item.minQuantity, Number(value) || item.minQuantity);
+      return { ...item, quantity, unitPrice: quantity >= item.bulkQuantity ? item.priceBulk : item.priceUnit };
+    }));
+  }
+
+  function sendQuote(items) {
+    items.forEach(item => trackWhatsAppContact(item, "quote_drawer"));
+  }
+
+  const quoteUnits = quote.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <>
@@ -89,13 +114,12 @@ export default function Home() {
             <div className="eyebrow">Catálogo 2027 · a partir de 10 unidades</div>
             <h2>Escolha a peça</h2>
             <p>
-              Toque em comprar para falar direto com a Amira no WhatsApp.
-              A mensagem já sai pronta, com a peça certa.
+              Escolha os produtos e as quantidades. Depois, envie o orçamento completo para a Amira pelo WhatsApp.
             </p>
           </div>
           <div className="grid">
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} onBuy={handleBuy} whatsappNumber={WHATSAPP_NUMBER} />
+              <ProductCard key={p.id} product={p} onAdd={addToQuote} />
             ))}
           </div>
         </div>
@@ -147,6 +171,11 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <button className={`quote-fab ${quote.length ? "has-items" : ""}`} type="button" onClick={() => setDrawerOpen(true)} aria-label={`Abrir orçamento com ${quoteUnits} unidades`}>
+        <span>Orçamento</span><strong>{quoteUnits}</strong>
+      </button>
+      <QuoteDrawer open={drawerOpen} items={quote} onClose={() => setDrawerOpen(false)} onChange={changeQuantity} onRemove={id => setQuote(current => current.filter(item => item.id !== id))} whatsappNumber={WHATSAPP_NUMBER} onSend={sendQuote} />
 
       <footer>
         <div className="container foot-row">

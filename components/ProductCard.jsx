@@ -1,4 +1,8 @@
-export default function ProductCard({ product, onBuy, whatsappNumber }) {
+import { useState } from "react";
+
+export default function ProductCard({ product, onAdd }) {
+  const [quantity, setQuantity] = useState(product.minQuantity);
+  const changeQuantity = value => setQuantity(Math.max(product.minQuantity, Number(value) || product.minQuantity));
   return (
     <article className="card">
       <div className="card-image">
@@ -20,15 +24,12 @@ export default function ProductCard({ product, onBuy, whatsappNumber }) {
           </div>
         </div>
         <div className="card-footer">
-          <a
-            className="btn btn-primary btn-block"
-            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(product.waMessage)}`}
-            target="_blank" rel="noopener noreferrer"
-            aria-label={`Comprar ${product.name} no WhatsApp`}
-            onClick={() => onBuy(product)}
-          >
-            Comprar no WhatsApp
-          </a>
+          <div className="quantity-picker" aria-label={`Quantidade de ${product.name}`}>
+            <button type="button" onClick={() => changeQuantity(quantity - 1)} aria-label={`Diminuir quantidade de ${product.name}`}>−</button>
+            <input type="number" min={product.minQuantity} value={quantity} onChange={event => changeQuantity(event.target.value)} aria-label={`Quantidade de ${product.name}`} />
+            <button type="button" onClick={() => changeQuantity(quantity + 1)} aria-label={`Aumentar quantidade de ${product.name}`}>+</button>
+          </div>
+          <button type="button" className="btn btn-primary btn-block" onClick={() => onAdd(product, quantity)}>Adicionar ao orçamento</button>
         </div>
       </div>
     </article>
