@@ -1,32 +1,36 @@
-export default function ProductCard({ product, onBuy }) {
+export default function ProductCard({ product, onBuy, whatsappNumber }) {
   return (
-    <div className="card">
+    <article className="card">
       <div className="card-image">
-        {product.tag && <span className="card-flag">{product.tag}</span>}
-        <img src={product.image} alt={product.name} loading="lazy" />
+        <img src={product.image} alt={product.name} loading="lazy" width="800" height="800" />
       </div>
       <div className="card-body">
         <h3>{product.name}</h3>
         <div className="card-meta">
           {product.material} · {product.size}
           <br />
-          {product.printArea}
+          Transfer incluído · bordado opcional
         </div>
         <div className="card-tag-row">
           <div className="hang-tag">
-            <div className="price">R$ {product.priceUnit}</div>
-            <div className="price-note">a partir de 40un: R$ {product.priceBulk}</div>
+            <div className="price">{product.priceUnit.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</div>
+            <div className="price-note">por unidade · a partir de {product.minQuantity} unidades</div>
+            <div className="bulk-price">{product.priceBulk.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</div>
+            <div className="price-note">por unidade · a partir de {product.bulkQuantity} unidades</div>
           </div>
         </div>
         <div className="card-footer">
-          <button
+          <a
             className="btn btn-primary btn-block"
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(product.waMessage)}`}
+            target="_blank" rel="noopener noreferrer"
+            aria-label={`Comprar ${product.name} no WhatsApp`}
             onClick={() => onBuy(product)}
           >
             Comprar no WhatsApp
-          </button>
+          </a>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
