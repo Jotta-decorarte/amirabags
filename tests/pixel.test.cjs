@@ -33,6 +33,12 @@ test('correspondência avançada é normalizada somente na inicialização autor
   const init=events.find(e=>e[0]==='init');
   assert.equal(init[1],'908423904913977');assert.equal(init[2].fn,'maria');assert.equal(init[2].ln,'da silva');assert.equal(init[2].ph,'21999998888');
 });
+test('correspondência pode ser aplicada quando o pixel já estava carregado',()=>{
+  const {api,events}=setup();api.setPixelConsent(true);api.initializePixel();
+  api.initializePixel({name:'João Souza',phone:'21 98888-7777'});
+  const inits=events.filter(e=>e[0]==='init');
+  assert.equal(inits.length,2);assert.equal(inits[1][2].fn,'joão');assert.equal(inits[1][2].ph,'21988887777');
+});
 test('Purchase usa total real, moeda, quantidades e ID estável; bloqueia repetição',()=>{
   const {api,events,storage}=setup();api.setPixelConsent(true);api.initializePixel();
   assert.equal(api.trackPurchase(order),true);assert.equal(api.trackPurchase(order),false);
