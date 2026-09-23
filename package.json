@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test tests/*.test.cjs",
-    "order:link": "node scripts/order-link.cjs"
+    "test": "node --test tests/*.test.cjs"
   },
   "dependencies": {
     "next": "14.2.5",

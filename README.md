@@ -33,7 +33,7 @@ próprio, cria um novo em Origens de dados > Adicionar.
 
 ## Rastreamento e página de obrigado
 
-Consulte TRACKING.md para eventos, emissão de links de compras confirmadas e limites de atribuição. O pixel é 908423904913977. Contact mede cliques para o WhatsApp; Purchase usa o total real de um pedido assinado pela loja. O cliente recebe e abre o link exclusivo.
+Consulte TRACKING.md para eventos, fluxo e limites de atribuição. O pixel é 908423904913977. A Amira envia `/venda`; o comprador preenche a finalização e `/obrigado` registra `Purchase` e apresenta a confirmação para o WhatsApp.
 
 Testes automatizados: npm test.
 
