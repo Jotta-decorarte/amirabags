@@ -57,9 +57,9 @@ campanha trouxe aquele clique de compra. Não precisa incluir UTM na
 mensagem do WhatsApp, cada botão já manda o nome certo do produto pro
 texto.
 
-Exemplo de link de anúncio pra Bolsa Prom:
+Exemplo de link de anúncio pra Bolsa Aurora:
 ```
-https://sua-lp.vercel.app/?utm_source=meta&utm_medium=paid&utm_campaign=amira_formatura&utm_content=bolsa_prom
+https://sua-lp.vercel.app/?utm_source=meta&utm_medium=paid&utm_campaign=amira_formatura&utm_content=bolsa_aurora
 ```
 
 ## Estrutura
@@ -79,6 +79,19 @@ public/images/  -> fotos dos produtos
 
 ## Editar preços ou produtos
 
-Tudo fica em `lib/products.js`. Cada produto/combo tem nome, preço,
-imagem e a mensagem que abre no WhatsApp (`waMessage`). Só editar ali,
-sem mexer no resto do código.
+Produtos e opções de personalização ficam em `lib/products.js`. Cada produto tem
+nome, material, medidas, foto, preços unitários para 10 e 30 unidades e a mensagem
+que abre no WhatsApp (`waMessage`). Os kits são orçados no atendimento, sem preços
+fechados no site.
+
+## Catálogo 2027
+
+Dados e seis fotos de produtos conferidos no catálogo fornecido pela marca:
+https://www.canva.com/design/DAHVr_Sw1pI/xgnQ_HpDKcBCIyLJk2Zr2g/edit
+
+Produtos e preços: páginas 5–6. Personalização: página 7. Condições: página 3.
+Necessaire Lua usa a grafia usual de “necessaire”; no catálogo consta “Necessarie Lua”.
+O WhatsApp e a foto principal do site anterior foram preservados. As fotos novas
+estão salvas no próprio projeto, sem depender de links temporários do Canva.
+
+Validar com `npm run build` e conferir a página em computador e celular.

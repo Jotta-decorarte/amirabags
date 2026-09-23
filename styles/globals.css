@@ -5,14 +5,14 @@
   --cream-deep: #EFE7D8;
   --charcoal: #2B2620;
   --charcoal-soft: #55503F;
-  --wine: #6E2438;
-  --wine-dark: #521A29;
-  --blush: #C98B93;
-  --kraft: #E3D6BC;
-  --kraft-line: #B9A87F;
-  --silk-1: #8D8377;
-  --silk-2: #6C6459;
-  --silk-3: #ACA294;
+  --wine: #590f13;
+  --wine-dark: #3d090c;
+  --blush: #edbfc1;
+  --kraft: #f9edef;
+  --kraft-line: #dfb8bc;
+  --silk-1: #711c24;
+  --silk-2: #480b10;
+  --silk-3: #8e3541;
 }
 
 * { box-sizing: border-box; }
@@ -443,3 +443,33 @@ a:focus-visible, button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+/* Identidade do catálogo 2027: vinho, rosé e branco. */
+.brand-wordmark { font-family: 'Work Sans', sans-serif; font-size: 58px; font-weight: 800; letter-spacing: -5px; margin-bottom: 28px; }
+.hero .btn-primary, .btn-light { background: #fff8f4; color: var(--wine); }
+.hero .btn-primary:hover, .btn-light:hover { background: #efd9dc; }
+.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.card-image { aspect-ratio: 1; }
+.card-image img { object-fit: contain; }
+.hang-tag { width: 100%; padding: 14px 18px; }
+.hang-tag::before { display: none; }
+.hang-tag .price-note { font-size: 12px; line-height: 1.5; }
+.bulk-price { font-weight: 600; font-size: 19px; color: var(--wine); margin-top: 12px; }
+.card-footer { margin-top: auto; padding-top: 22px; }
+.kits-band { background: var(--wine); color: #fff8f4; }
+.kit-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center; }
+.kit-layout h2 { font-size: clamp(30px,4vw,42px); }
+.kit-layout p { line-height: 1.7; margin: 20px 0 26px; }
+.kit-note { border-left: 1px solid #bb7b82; padding-left: 40px; }
+.kit-note span { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; }
+.kit-note strong { display: block; font-family: 'Fraunces',serif; font-size: 36px; font-weight: 400; margin-top: 16px; }
+.personalization-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.personalization-card { background: #fffaf8; padding: 28px; border-top: 3px solid var(--wine); }
+.personalization-card strong { display: block; color: var(--wine); margin: 16px 0; }
+.personalization-card p, .art-note { font-size: 14px; line-height: 1.7; color: var(--charcoal-soft); }
+.art-note { text-align: center; margin: 28px auto 0; max-width: 680px; }
+footer { background: var(--wine-dark); }
+footer strong { font-family: 'Work Sans',sans-serif; font-size: 32px; font-weight: 800; letter-spacing: -2px; }
+.hero a:focus-visible, .kits-band a:focus-visible { outline-color: white; }
+@media(max-width:860px) { .grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .kit-layout { grid-template-columns: 1fr; gap: 32px; } .personalization-grid { grid-template-columns: 1fr; } .kit-note { padding-left: 24px; } }
+@media(max-width:560px) { .grid { grid-template-columns: 1fr; } .hero-visual { width: 100%; } .hero-inner { gap: 30px; } .hero h1 { font-size: 42px; } .brand-wordmark { font-size: 46px; margin-bottom: 20px; } .container { padding-left: 20px; padding-right: 20px; } }

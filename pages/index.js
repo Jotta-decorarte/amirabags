@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { products, combos, straps } from "../lib/products";
+import { products, personalizations } from "../lib/products";
 import { trackInitiateCheckout } from "../lib/pixel";
 import ProductCard from "../components/ProductCard";
 import ConfirmBar from "../components/ConfirmBar";
@@ -9,20 +9,7 @@ import ConfirmBar from "../components/ConfirmBar";
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5521972628996";
 
-const STRAP_COLORS = {
-  "Vinho": "#6E2438",
-  "Lilás": "#A78BC9",
-  "Azul Marinho": "#1F2A44",
-  "Rosê": "#D9A6AE",
-  "Ice Green": "#B7CBB0",
-  "Verde Musgo": "#5B6E4F",
-  "Bege": "#D8C7A1",
-  "Marrom": "#7B5B3E",
-  "Marrom Choc": "#4A2F22",
-  "Preto": "#1C1A18",
-  "Cinza": "#9C978F",
-  "Branco / Off White": "#EFE9DC"
-};
+const kitMessage = "Olá! Quero montar um kit personalizado para meu evento com os produtos do catálogo Amira 2027. Podemos combinar modelos, quantidade, personalização e prazo?";
 
 export default function Home() {
   const router = useRouter();
@@ -52,10 +39,7 @@ export default function Home() {
     sessionStorage.setItem("amira_pending", JSON.stringify(pendingItem));
     setPending(pendingItem);
 
-    const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-      item.waMessage
-    )}`;
-    window.open(link, "_blank", "noopener,noreferrer");
+    // O link do produto abre o WhatsApp, inclusive sem JavaScript.
   }
 
   function handleConfirm() {
@@ -84,11 +68,12 @@ export default function Home() {
       <section className="hero">
         <div className="container hero-inner">
           <div>
-            <div className="eyebrow">Amira Bags · Handmade</div>
+            <div className="brand-wordmark">amira.</div>
+            <div className="eyebrow">Amira · Catálogo 2027</div>
             <h1>
-              Ecobags que carregam
+              Seu grande dia
               <br />
-              <em>o nome de cada história</em>
+              <em>começa aqui</em>
             </h1>
             <p className="lead">
               Peças artesanais personalizadas para formatura, casamento e
@@ -126,7 +111,7 @@ export default function Home() {
       <section id="produtos" className="section">
         <div className="container">
           <div className="section-head">
-            <div className="eyebrow">Catálogo</div>
+            <div className="eyebrow">Catálogo 2027 · a partir de 10 unidades</div>
             <h2>Escolha a peça</h2>
             <p>
               Toque em comprar para falar direto com a Amira no WhatsApp.
@@ -135,62 +120,35 @@ export default function Home() {
           </div>
           <div className="grid">
             {products.map((p) => (
-              <ProductCard key={p.id} product={p} onBuy={handleBuy} />
+              <ProductCard key={p.id} product={p} onBuy={handleBuy} whatsappNumber={WHATSAPP_NUMBER} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* KITS */}
-      <section id="kits" className="section section-tight" style={{ background: "var(--cream-deep)" }}>
-        <div className="container">
-          <div className="section-head">
-            <div className="eyebrow">Para turmas de formatura</div>
-            <h2>Kits fechados, preço por volume</h2>
-            <p>Bolsa Prom, Saquinho e Necessaire combinados, com desconto por quantidade.</p>
+      <section id="kits" className="section section-tight kits-band">
+        <div className="container kit-layout">
+          <div>
+            <div className="eyebrow">Para formaturas, casamentos e eventos</div>
+            <h2>Um kit com a sua história</h2>
+            <p>Combine sua bolsa favorita com a Necessaire Lua e o Porta Chinelo. Conte a quantidade e a data do evento para receber um orçamento personalizado.</p>
+            <a className="btn btn-light" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(kitMessage)}`} target="_blank" rel="noopener noreferrer">Montar meu kit no WhatsApp</a>
           </div>
-          <div className="combo-grid">
-            {combos.map((c) => (
-              <div className="combo-card" key={c.id}>
-                <div className="combo-image">
-                  <img src={c.image} alt={c.name} loading="lazy" />
-                </div>
-                <div className="combo-body">
-                  <h3>{c.name}</h3>
-                  <p>{c.description}</p>
-                  <div className="combo-price">
-                    R$ {c.price.toLocaleString("pt-BR")}
-                    <small>{c.units} kits completos</small>
-                  </div>
-                  <button
-                    className="btn btn-primary btn-block"
-                    onClick={() => handleBuy(c)}
-                  >
-                    Comprar no WhatsApp
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className="kit-note"><span>Feito para celebrar</span><strong>Cada detalhe,<br />do seu jeito.</strong><p>Escolha as peças. Personalize os nomes. Deixe o seu dia ainda mais especial.</p></div>
         </div>
       </section>
 
-      {/* CORES DE ALCA */}
-      <section className="section straps-band">
+      <section className="section straps-band" id="personalizacao">
         <div className="container">
           <div className="section-head">
             <div className="eyebrow">Personalização</div>
-            <h2>Cores de alça gorgurão</h2>
-            <p>Escolha a cor da alça na hora de fechar o pedido no WhatsApp.</p>
+            <h2>O seu nome faz parte</h2>
+            <p>Transfer ou bordado para transformar cada peça em uma lembrança do seu evento.</p>
           </div>
-          <div className="strap-grid">
-            {straps.map((s) => (
-              <div className="strap-swatch" key={s}>
-                <div className="chip" style={{ background: STRAP_COLORS[s] }} />
-                <span>{s}</span>
-              </div>
-            ))}
+          <div className="personalization-grid">
+            {personalizations.map(option => <article className="personalization-card" key={option.name}><h3>{option.name}</h3><strong>{option.price}</strong><p>{option.description}</p></article>)}
           </div>
+          <p className="art-note">Envie sua arte ou logo em PDF de alta qualidade ou como link do Canva. Consulte cores e disponibilidade pelo WhatsApp.</p>
         </div>
       </section>
 
@@ -198,6 +156,7 @@ export default function Home() {
       <section className="section section-tight">
         <div className="container">
           <div className="info-grid">
+            <div className="info-item"><h4>Frete</h4><p>Calculado após a finalização do pedido, conforme o peso e as dimensões da caixa. Peça uma previsão de custo no atendimento.</p></div>
             <div className="info-item">
               <h4>Prazo de envio</h4>
               <p>Mínimo de 40 dias úteis. Prazos menores, só consultando disponibilidade direto com a Amira.</p>
@@ -208,7 +167,7 @@ export default function Home() {
             </div>
             <div className="info-item">
               <h4>Feito à mão</h4>
-              <p>Cada peça é artesanal. Pode haver pequenas variações de tom e tecido entre lotes diferentes.</p>
+              <p>Cada peça é artesanal. Pode haver pequenas variações de tamanho, tom e tecido entre lotes diferentes.</p>
             </div>
           </div>
         </div>
