@@ -14,7 +14,7 @@ export default function Analytics({ children }) {
   const [ready, setReady] = useState(false);
   const [editing, setEditing] = useState(false);
   const lastPage = useRef(null);
-  const pageAllowed = router.pathname === "/" || (["/venda","/obrigado"].includes(router.pathname) && orderAllowed);
+  const pageAllowed = ["/", "/venda"].includes(router.pathname) || (router.pathname === "/obrigado" && orderAllowed);
 
   useEffect(() => { setConsent(readStorage(CONSENT_KEY)); setLoaded(true); }, []);
   useEffect(() => {
