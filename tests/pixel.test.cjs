@@ -28,6 +28,11 @@ test('Contact registra produto ou kit, sem Purchase/checkout e evita clique dupl
   assert.equal(sent.length,2);assert.ok(sent.every(e=>e[2]==='Contact'));
   assert.equal(sent[0][3].content_ids[0],'bolsa-aurora');assert.equal(sent[1][3].placement,'kits');
 });
+test('correspondência avançada é normalizada somente na inicialização autorizada',()=>{
+  const {api,events}=setup();api.setPixelConsent(true);api.initializePixel({name:'  Maria da Silva ',phone:'(21) 99999-8888'});
+  const init=events.find(e=>e[0]==='init');
+  assert.equal(init[1],'908423904913977');assert.equal(init[2].fn,'maria');assert.equal(init[2].ln,'da silva');assert.equal(init[2].ph,'21999998888');
+});
 test('Purchase usa total real, moeda, quantidades e ID estável; bloqueia repetição',()=>{
   const {api,events,storage}=setup();api.setPixelConsent(true);api.initializePixel();
   assert.equal(api.trackPurchase(order),true);assert.equal(api.trackPurchase(order),false);

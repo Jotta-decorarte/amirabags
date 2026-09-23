@@ -20,16 +20,15 @@ if (process.argv.includes('--init')) {
   const inputPath = process.argv[2];
   if (!inputPath) throw new Error('Uso: node scripts/order-link.cjs caminho/pedido.json');
   const input = JSON.parse(fs.readFileSync(inputPath,'utf8'));
-  if (input.confirmed !== true) throw new Error('Gere links apenas de compras confirmadas: confirmed deve ser true.');
+  if (input.confirmed !== true) throw new Error('Gere links apenas após finalizar a compra no WhatsApp: confirmed deve ser true.');
   if (typeof input.reference !== 'string' || !/^[A-Z0-9-]{3,60}$/.test(input.reference)) throw new Error('Informe referência interna sem nome, telefone ou e-mail.');
   const ledger = fs.existsSync(ledgerPath) ? JSON.parse(fs.readFileSync(ledgerPath,'utf8')) : {};
   const test = input.test === true;
   const key = `${test?'test':'sale'}:${input.reference}`;
   let saved = ledger[key];
-  if (saved && (saved.order.totalCents !== input.totalCents || JSON.stringify(saved.order.items) !== JSON.stringify(input.items))) throw new Error('Pedido já emitido com outros dados; não gerar conversão duplicada.');
   if (!saved) {
     const iat = Math.floor(Date.now()/1000);
-    const order = {v:1,id:`amr_${randomBytes(16).toString('hex')}`,totalCents:input.totalCents,items:input.items,iat,exp:iat+MAX_AGE,test};
+    const order = {v:2,id:`amr_${randomBytes(16).toString('hex')}`,iat,exp:iat+MAX_AGE,test};
     const token = signOrder(order,fs.readFileSync(privatePath,'utf8'));
     saved = {order,token}; ledger[key]=saved;
     fs.writeFileSync(ledgerPath,JSON.stringify(ledger,null,2),{mode:0o600});

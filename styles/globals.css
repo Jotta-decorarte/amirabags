@@ -490,4 +490,18 @@ footer strong { font-family: 'Work Sans',sans-serif; font-size: 32px; font-weigh
 .order-total { font-size: 20px; color: var(--wine); }
 .back-catalog { display: block; margin-top: 24px; text-decoration: underline; }
 .preview-note { border: 1px solid var(--wine); padding: 12px; }
+.order-form { display: grid; gap: 20px; }
+.order-form > label { display: grid; gap: 8px; font-weight: 600; }
+.order-form input[type="text"], .order-form input:not([type]) { width: 100%; }
+.order-form input { font: inherit; }
+.order-form > label > input { border: 1px solid var(--kraft-line); background: #fff; border-radius: 3px; padding: 13px; }
+.order-form fieldset { border: 1px solid var(--kraft-line); padding: 18px; }
+.order-form legend { font-family: 'Fraunces',serif; font-size: 20px; color: var(--wine); padding: 0 8px; }
+.product-check { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 10px 0; border-bottom: 1px solid #eadbdd; }
+.product-check > label:first-child { display: flex; gap: 10px; align-items: center; }
+.quantity { display: flex; gap: 8px; align-items: center; font-size: 12px; }
+.quantity input { width: 74px; padding: 7px; }
+.data-consent { grid-template-columns: auto 1fr !important; align-items: start; font-size: 12px; line-height: 1.5; font-weight: 400 !important; }
+.data-consent input { margin-top: 3px; }
+.form-error { color: #9f1620 !important; font-weight: 600; }
 @media(max-width:700px) { .cookie-banner { flex-direction: column; align-items: stretch; gap: 14px; } .cookie-actions { flex-wrap: wrap; } .cookie-actions .btn { flex: 1; padding: 12px; } .thank-you-card { padding: 26px; } }
