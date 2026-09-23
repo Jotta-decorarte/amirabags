@@ -473,3 +473,21 @@ footer strong { font-family: 'Work Sans',sans-serif; font-size: 32px; font-weigh
 .hero a:focus-visible, .kits-band a:focus-visible { outline-color: white; }
 @media(max-width:860px) { .grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .kit-layout { grid-template-columns: 1fr; gap: 32px; } .personalization-grid { grid-template-columns: 1fr; } .kit-note { padding-left: 24px; } }
 @media(max-width:560px) { .grid { grid-template-columns: 1fr; } .hero-visual { width: 100%; } .hero-inner { gap: 30px; } .hero h1 { font-size: 42px; } .brand-wordmark { font-size: 46px; margin-bottom: 20px; } .container { padding-left: 20px; padding-right: 20px; } }
+
+/* Privacidade e confirmação de pedidos. */
+.privacy-settings { display: block; margin: 16px auto; background: none; border: 0; text-decoration: underline; color: var(--wine); padding: 12px; cursor: pointer; }
+.cookie-banner { position: fixed; bottom: 16px; left: 16px; right: 16px; margin: auto; max-width: 1020px; z-index: 100; display: flex; align-items: center; gap: 28px; padding: 22px; background: #fffaf7; color: var(--charcoal); border: 1px solid var(--kraft-line); box-shadow: 0 6px 40px #0003; border-radius: 8px; }
+.cookie-banner p { font-size: 13px; line-height: 1.6; margin: 6px 0 0; }
+.cookie-actions { display: flex; gap: 12px; flex-shrink: 0; }
+.privacy-reject { border-color: var(--wine); background: transparent; color: var(--wine); }
+.thank-you { min-height: 90vh; padding: 64px 20px; background: linear-gradient(140deg,#590f13,#8e3541); }
+.thank-you-card { max-width: 680px; padding: 44px; background: var(--cream); margin: auto; border-radius: 8px; }
+.thank-you-card .brand-wordmark { color: var(--wine); display: inline-block; }
+.thank-you-card h1 { font-size: clamp(32px,5vw,44px); color: var(--wine); }
+.thank-you-card p { line-height: 1.7; color: var(--charcoal-soft); }
+.order-items { list-style: none; padding: 0; margin: 30px 0 0; }
+.order-items li, .order-total { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--kraft-line); }
+.order-total { font-size: 20px; color: var(--wine); }
+.back-catalog { display: block; margin-top: 24px; text-decoration: underline; }
+.preview-note { border: 1px solid var(--wine); padding: 12px; }
+@media(max-width:700px) { .cookie-banner { flex-direction: column; align-items: stretch; gap: 14px; } .cookie-actions { flex-wrap: wrap; } .cookie-actions .btn { flex: 1; padding: 12px; } .thank-you-card { padding: 26px; } }
