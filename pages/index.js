@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { products, personalizations } from "../lib/products";
-import { trackInitiateCheckout } from "../lib/pixel";
+import { trackCatalogView, trackWhatsAppContact } from "../lib/pixel";
+import { useAnalytics } from "../components/Analytics";
 import ProductCard from "../components/ProductCard";
-import ConfirmBar from "../components/ConfirmBar";
 
 const WHATSAPP_NUMBER =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5521972628996";
@@ -12,46 +11,22 @@ const WHATSAPP_NUMBER =
 const kitMessage = "Olá! Quero montar um kit personalizado para meu evento com os produtos do catálogo Amira 2027. Podemos combinar modelos, quantidade, personalização e prazo?";
 
 export default function Home() {
-  const router = useRouter();
-  const [pending, setPending] = useState(null);
-  const [showToast, setShowToast] = useState(false);
-
-  // Guarda o UTM de entrada na sessao, para amarrar depois qual anuncio trouxe o pedido
+  const { ready } = useAnalytics();
+  const viewed = useRef(false);
   useEffect(() => {
-    if (!router.isReady) return;
-    const { utm_source, utm_medium, utm_campaign, utm_content } = router.query;
-    if (utm_source || utm_campaign) {
-      sessionStorage.setItem(
-        "amira_utm",
-        JSON.stringify({ utm_source, utm_medium, utm_campaign, utm_content })
-      );
-    }
-    const saved = sessionStorage.getItem("amira_pending");
-    if (saved) setPending(JSON.parse(saved));
-  }, [router.isReady, router.query]);
+    if (!ready || viewed.current) return;
+    const catalog = document.getElementById("produtos");
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting) && trackCatalogView()) {
+        viewed.current = true;
+        observer.disconnect();
+      }
+    }, { threshold: 0.05 });
+    if (catalog) observer.observe(catalog);
+    return () => observer.disconnect();
+  }, [ready]);
 
-  function handleBuy(item) {
-    const name = item.name;
-    const price = item.price ?? item.priceUnit;
-    trackInitiateCheckout(name, price);
-
-    const pendingItem = { name, price };
-    sessionStorage.setItem("amira_pending", JSON.stringify(pendingItem));
-    setPending(pendingItem);
-
-    // O link do produto abre o WhatsApp, inclusive sem JavaScript.
-  }
-
-  function handleConfirm() {
-    sessionStorage.removeItem("amira_pending");
-    setPending(null);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3600);
-  }
-
-  function handleDismiss() {
-    setPending(null);
-  }
+  function handleBuy(item) { trackWhatsAppContact(item); }
 
   return (
     <>
@@ -132,7 +107,7 @@ export default function Home() {
             <div className="eyebrow">Para formaturas, casamentos e eventos</div>
             <h2>Um kit com a sua história</h2>
             <p>Combine sua bolsa favorita com a Necessaire Lua e o Porta Chinelo. Conte a quantidade e a data do evento para receber um orçamento personalizado.</p>
-            <a className="btn btn-light" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(kitMessage)}`} target="_blank" rel="noopener noreferrer">Montar meu kit no WhatsApp</a>
+            <a className="btn btn-light" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(kitMessage)}`} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppContact({ id: "kit-personalizado", name: "Kit personalizado" }, "kits")}>Montar meu kit no WhatsApp</a>
           </div>
           <div className="kit-note"><span>Feito para celebrar</span><strong>Cada detalhe,<br />do seu jeito.</strong><p>Escolha as peças. Personalize os nomes. Deixe o seu dia ainda mais especial.</p></div>
         </div>
@@ -179,15 +154,9 @@ export default function Home() {
             <strong>amira.</strong>
             <div style={{ marginTop: 4 }}>@souamira.bag</div>
           </div>
-          <div>WhatsApp +55 21 97262-8996 · contato.amirabag@gmail.com</div>
+          <div><a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Olá! Quero saber mais sobre os produtos da Amira.")}`} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppContact({ id: "atendimento", name: "Atendimento Amira" }, "footer")}>WhatsApp +55 21 97262-8996</a> · contato.amirabag@gmail.com</div>
         </div>
       </footer>
-
-      <ConfirmBar pending={pending} onConfirm={handleConfirm} onDismiss={handleDismiss} />
-
-      {showToast && (
-        <div className="toast">Pedido confirmado. Obrigada! 🎉</div>
-      )}
     </>
   );
 }
